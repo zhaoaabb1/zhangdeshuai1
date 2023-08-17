@@ -9,6 +9,7 @@ public class Role {
   private String roleName;
   private String roleDesc;
   private  int age;
+  private  int age1;
 
 
 
