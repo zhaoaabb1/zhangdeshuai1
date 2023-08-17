@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yunhe.mapper.UserMapper">
+    <select id="findAll" resultType="user" >
+     select * from user
+ </select>
+    <insert id="addUser" parameterType="user">
+        insert into user (username,birthday,sex,address) values (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <update id="updateUser" parameterType="user">
+        update user set username=#{username},birthday=#{birthday},sex=#{sex},address=#{address} where id=#{id}
+    </update>
+    <select id="findAllBy" resultType="user">
+        select * from user where username=#{username}and address=#{address}
+    </select>
+    <select id="findAllLike" resultType="user">
+        select * from user where username like '%' #{username} '%'
+    </select>
+    <!--
+        useGeneratedKeys:使用自增主键
+          keyProperty:实体类中id
+          keyColumn:数据库中的id
+    -->
+    <insert id="addUser1" parameterType="user" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into user (username,birthday,sex,address) values (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <select id="findAllLikeSelect" resultType="user">
+       select * from user
+<where>
+    <if test="username!=null">
+        and username like '%' #{username} '%'
+    </if>
+    <if test="sex!=null">
+        and sex = #{sex}
+    </if>
+</where>
+    </select>
+    <update id="updateUser1" parameterType="user">
+        update user
+<set>
+<if test="username!=null">
+    username = #{username},
+</if>
+<if test="birthday!=null">
+    birthday = #{birthday},
+</if>
+<if test="sex!=null">
+    sex = #{sex},
+</if>
+<if test="address!=null">
+    address = #{address},
+</if>
+
+</set>
+where id=#{id}
+    </update>
+    <delete id="deleteAll" parameterType="list">
+        delete  from user where id in 
+                 <foreach collection="list" open="(" close=")" item="id" separator=",">
+                     #{id}
+                 </foreach>
+    </delete>
+    <sql id="selectUser">
+        select id,username,birthday,sex,address from user
+    </sql>
+    <select id="findAll2"  parameterType="list" resultType="user">
+            <include refid="selectUser"/> where id in
+               <foreach collection="list" open="(" close=")" item="id" separator=",">
+                   #{id}
+               </foreach>
+                 
+    </select>
+
+</mapper>
